@@ -1,5 +1,7 @@
 #include "XenUI.h"
+#include "XenApp.h"
 
+#include <memory>
 #include <stdexcept>
 
 namespace {
@@ -47,6 +49,10 @@ BOOL InitInstance(HINSTANCE, int);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 void EventLoop(HWND hWnd);
 
+namespace {
+    std::unique_ptr<XenUI::XenApp> g_App;
+}
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance,
                    _In_opt_ HINSTANCE hPrevInstance,
                    _In_ LPSTR lpCmdLine,
@@ -66,6 +72,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
         return E_FAIL;
     }
 
+    g_App = std::make_unique<XenUI::XenApp>(g_hWnd);
     EventLoop(g_hWnd);
 
     ::CoUninitialize();

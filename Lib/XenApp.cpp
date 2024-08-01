@@ -5,4 +5,5 @@
 #include "XenApp.h"
 
 namespace XenUI {
+    XenApp::XenApp(HWND window) {}
 } // XenUI
