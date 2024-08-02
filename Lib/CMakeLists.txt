@@ -12,6 +12,8 @@ add_library(XenUI STATIC XenUI.h App.h App.cpp
         Platform.h
         Canvas.cpp
         Canvas.h
+        Widget.cpp
+        Widget.h
 )
 
 target_link_libraries(XenUI PRIVATE

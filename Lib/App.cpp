@@ -12,10 +12,10 @@ namespace XenUI {
         m_Canvas = std::make_unique<Canvas>(m_Window->GetHandle());
     }
 
-    void IApp::Run() const {
+    void IApp::Run() {
         while (!m_Window->ShouldClose()) {
             m_Window->DispatchMessages();
-            m_Canvas->Draw();
+            m_Canvas->Draw(BuildUI());
         }
     }
 }  // namespace XenUI

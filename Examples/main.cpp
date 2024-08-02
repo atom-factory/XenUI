@@ -8,10 +8,15 @@ namespace {
     HINSTANCE g_hInst;
 }  // namespace
 
-class DemoApp : public XenUI::IApp {
+class DemoApp final : public XenUI::IApp {
 public:
     DemoApp(int width, int height, const std::string& title) : XenUI::IApp(width, height, title) {}
+    XenUI::IWidget* BuildUI() override;
 };
+
+XenUI::IWidget* DemoApp::BuildUI() {
+    return nullptr;
+}
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance,
                    _In_opt_ HINSTANCE hPrevInstance,

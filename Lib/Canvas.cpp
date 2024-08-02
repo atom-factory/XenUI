@@ -27,11 +27,14 @@ namespace XenUI {
         }
     }
 
-    void Canvas::Draw() const {
+    void Canvas::Draw(IWidget* root) const {
         const auto rt = m_pRenderTarget.Get();
         if (rt) {
             rt->BeginDraw();
             rt->Clear(D2D1::ColorF(D2D1::ColorF::Black));
+
+            // Render widget tree
+
             ThrowIfFailed(rt->EndDraw());
         }
     }
