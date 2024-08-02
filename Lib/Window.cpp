@@ -114,7 +114,7 @@ namespace XenUI {
         ZeroMemory(&wc, sizeof(WNDCLASSEXA));
 
         wc.cbSize        = sizeof(WNDCLASSEXA);
-        wc.style         = CS_HREDRAW | CS_VREDRAW;
+        wc.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
         wc.lpfnWndProc   = WndProc;
         wc.hInstance     = hInstance;
         wc.hIcon         = ::LoadIcon(hInstance, IDI_APPLICATION);
