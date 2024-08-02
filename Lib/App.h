@@ -4,11 +4,9 @@
 
 #pragma once
 
-#include "XenUI.h"
-
 namespace XenUI {
-    class XenApp {
+    class App {
     public:
-        explicit XenApp(HWND window);
+        App();
     };
 }  // namespace XenUI

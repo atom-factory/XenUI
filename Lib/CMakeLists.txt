@@ -6,4 +6,7 @@ include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_library(XenUI STATIC XenUI.h XenApp.h XenApp.cpp)
+add_library(XenUI STATIC XenUI.h App.h App.cpp
+        Window.cpp
+        Window.h
+        Platform.h)

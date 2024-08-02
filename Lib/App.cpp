@@ -2,8 +2,8 @@
 // Created: 8/1/2024.
 //
 
-#include "XenApp.h"
+#include "App.h"
 
 namespace XenUI {
-    XenApp::XenApp(HWND window) {}
-} // XenUI
+    App::App() {}
+}  // namespace XenUI
