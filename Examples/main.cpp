@@ -8,9 +8,10 @@ namespace {
     HINSTANCE g_hInst;
 }  // namespace
 
-namespace {
-    std::unique_ptr<XenUI::App> g_App;
-}
+class DemoApp : public XenUI::IApp {
+public:
+    DemoApp(int width, int height, const std::string& title) : XenUI::IApp(width, height, title) {}
+};
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance,
                    _In_opt_ HINSTANCE hPrevInstance,
@@ -20,9 +21,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
     g_hInst = hInstance;
 
-    XenUI::Window window(hInstance, nCmdShow, 800, 600);
-    window.SetTitle("XenUI Demo");
-    window.Show();
+    DemoApp demoApp(800, 600, "XenUI Demo");
+    demoApp.Run();
 
     return S_OK;
 }

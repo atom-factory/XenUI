@@ -28,8 +28,17 @@ namespace XenUI {
         void Minimize() const;
         void Maximize() const;
         void Restore() const;
-        void Show();
         void TriggerRedraw() const;
+        void DispatchMessages();
+
+        /// Getters
+        HWND GetHandle() const {
+            return m_hWnd;
+        }
+
+        bool ShouldClose() const {
+            return m_ShouldClose;
+        }
 
         /// Event handlers
         void OnPaint();
@@ -41,13 +50,13 @@ namespace XenUI {
     private:
         ATOM RegisterWindowClass(HINSTANCE hInstance) const;
         void InitializeInstance(HINSTANCE hInstance, int nCmdShow);
-        static void EventLoop();
 
         HWND m_hWnd;
         LPCSTR m_ClassName;
         LPCSTR m_Title;
-        std::atomic<bool> m_isRunning;
         int m_Width;
         int m_Height;
+        bool m_ShouldClose;
+        MSG m_Msg;
     };
 }  // namespace XenUI

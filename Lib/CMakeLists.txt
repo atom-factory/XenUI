@@ -9,4 +9,12 @@ include_directories(
 add_library(XenUI STATIC XenUI.h App.h App.cpp
         Window.cpp
         Window.h
-        Platform.h)
+        Platform.h
+        Canvas.cpp
+        Canvas.h
+)
+
+target_link_libraries(XenUI PRIVATE
+        d2d1.lib
+        dwrite.lib
+)

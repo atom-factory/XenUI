@@ -7,8 +7,8 @@
 namespace XenUI {
     Window::Window(
       HINSTANCE hInstance, int nCmdShow, int width, int height, LPCSTR className, LPCSTR title)
-        : m_hWnd(nullptr), m_ClassName(className), m_Title(title), m_Width(width),
-          m_Height(height) {
+        : m_hWnd(nullptr), m_ClassName(className), m_Title(title), m_Width(width), m_Height(height),
+          m_ShouldClose(false) {
         ThrowIfFailed(::CoInitializeEx(nullptr, COINIT_MULTITHREADED));
 
         if (RegisterWindowClass(hInstance) <= 0) {
@@ -66,13 +66,6 @@ namespace XenUI {
         ::ShowWindow(m_hWnd, SW_RESTORE);
     }
 
-    void Window::Show() {
-        ::UpdateWindow(m_hWnd);
-        ::ShowWindow(m_hWnd, SW_SHOWNORMAL);
-
-        EventLoop();
-    }
-
     void Window::TriggerRedraw() const {
         ::InvalidateRect(m_hWnd, nullptr, TRUE);
     }
@@ -84,23 +77,26 @@ namespace XenUI {
     }
 
     LRESULT Window::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-        const auto window = reinterpret_cast<Window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+        const LONG_PTR userData = ::GetWindowLongPtr(hWnd, GWLP_USERDATA);
+        const auto window       = reinterpret_cast<Window*>(userData);
+
+        if (!window) {
+            return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
+        }
 
         switch (uMsg) {
-            case WM_CREATE: {
-                if (lParam) {
-                    const auto params = reinterpret_cast<LPCREATESTRUCTA>(lParam);
-                    ::SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(params));
-                }
-            } break;
+            case WM_CLOSE: {
+                window->m_ShouldClose = true;
+                ::PostQuitMessage(0);
+            }
+                return 0;
             case WM_DESTROY:
                 ::PostQuitMessage(0);
                 break;
             case WM_SIZE: {
                 const auto width  = LOWORD(lParam);
                 const auto height = HIWORD(lParam);
-                if (window)
-                    window->OnResize(width, height);
+                window->OnResize(width, height);
             } break;
             default:
                 return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -122,6 +118,7 @@ namespace XenUI {
         wc.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
         wc.lpszClassName = m_ClassName;
         wc.hIconSm       = wc.hIcon;
+        wc.cbWndExtra    = sizeof(Window);
 
         return RegisterClassExA(&wc);
     }
@@ -149,17 +146,16 @@ namespace XenUI {
             ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
         }
 
+        ::SetWindowLongPtr(m_hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+
         ::ShowWindow(m_hWnd, nCmdShow);
         ::UpdateWindow(m_hWnd);
     }
 
-    void Window::EventLoop() {
-        MSG msg = {};
-        while (WM_QUIT != msg.message) {
-            if (::PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
-                ::TranslateMessage(&msg);
-                ::DispatchMessage(&msg);
-            }
+    void Window::DispatchMessages() {
+        if (::PeekMessage(&m_Msg, nullptr, 0, 0, PM_REMOVE)) {
+            ::TranslateMessage(&m_Msg);
+            ::DispatchMessage(&m_Msg);
         }
     }
 }  // namespace XenUI
