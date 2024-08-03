@@ -6,6 +6,8 @@
 
 #include "Events.h"
 
+#include <queue>
+
 namespace XenUI {
     Canvas::Canvas(const Window* window, const std::shared_ptr<EventDispatcher>& dispatcher)
         : m_pDispatcher(dispatcher) {
@@ -47,6 +49,25 @@ namespace XenUI {
             rt->Clear(D2D1::ColorF(D2D1::ColorF::Black));
 
             // Render widget tree
+            if (root) {
+                std::queue<IWidget*> queue;
+                queue.push(root);
+
+                while (!queue.empty()) {
+                    IWidget* widget = queue.front();
+                    queue.pop();
+
+                    widget->Draw(m_pRenderTarget.Get());
+
+                    auto result = widget->GetChildren();
+                    if (result.has_value()) {
+                        auto children = result.value();
+                        for (const auto& child : children) {
+                            queue.push(child);
+                        }
+                    }
+                }
+            }
 
             ThrowIfFailed(rt->EndDraw());
         }

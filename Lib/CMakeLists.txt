@@ -17,6 +17,8 @@ add_library(XenUI STATIC XenUI.h App.h App.cpp
         EventSystem.cpp
         EventSystem.h
         Events.h
+        Context.cpp
+        Context.h
 )
 
 target_link_libraries(XenUI PRIVATE

@@ -8,6 +8,19 @@ namespace {
     HINSTANCE g_hInst;
 }  // namespace
 
+class ButtonWidget : public XenUI::IWidget {
+public:
+    ButtonWidget() = default;
+    void Draw(ID2D1RenderTarget* context) override;
+};
+
+void ButtonWidget::Draw(ID2D1RenderTarget* context) {
+    ID2D1SolidColorBrush* brush = nullptr;
+    XenUI::ThrowIfFailed(context->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &brush));
+    context->FillRectangle({100, 100, 300, 200}, brush);
+    brush->Release();
+}
+
 class DemoApp final : public XenUI::IApp {
 public:
     DemoApp(int width, int height, const std::string& title) : XenUI::IApp(width, height, title) {}
@@ -15,7 +28,7 @@ public:
 };
 
 XenUI::IWidget* DemoApp::BuildUI() {
-    return nullptr;
+    return new ButtonWidget();
 }
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance,

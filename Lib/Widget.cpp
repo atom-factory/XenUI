@@ -4,4 +4,10 @@
 
 #include "Widget.h"
 
-namespace XenUI {}  // namespace XenUI
+namespace XenUI {
+    IWidget::~IWidget() {
+        for (const auto child : m_Children) {
+            delete child;
+        }
+    }
+}  // namespace XenUI
