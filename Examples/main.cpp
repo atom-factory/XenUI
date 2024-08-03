@@ -20,7 +20,11 @@ public:
     void Draw(Context* context, const Dimension& dim) override;
 };
 
-void ButtonWidget::Draw(Context* context, const Dimension& dim) {}
+void ButtonWidget::Draw(Context* context, const Dimension& dim) {
+    const auto brush = context->CreateColorBrush(Colors::Cyan);
+    context->GetD2DRenderTarget()->FillRectangle(GetRect().ToD2DRect(), brush);
+    brush->Release();
+}
 
 class DemoApp final : public IApp {
 public:
@@ -32,8 +36,10 @@ public:
 };
 
 IWidget* DemoApp::BuildUI() {
-    const auto helloBtn = new ButtonWidget({200, 300}, {200, 48});
-    const auto quitBtn  = new ButtonWidget({600, 300}, {200, 48});
+    auto dim = Dimension(m_pCanvas->GetSize());
+
+    const auto helloBtn = new ButtonWidget({dim.Width(20.f), dim.Height(80.f)}, {200, 48});
+    const auto quitBtn  = new ButtonWidget({dim.WidthRight(20.f), dim.Height(80.f)}, {200, 48});
 
     helloBtn->AddChild(quitBtn);
 

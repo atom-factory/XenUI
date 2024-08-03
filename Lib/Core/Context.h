@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include "Color.h"
 #include "Platform.h"
 
 namespace XenUI {
@@ -22,7 +23,7 @@ namespace XenUI {
             return m_pRenderTarget.Get();
         }
 
-        ID2D1SolidColorBrush* CreateColorBrush();
+        ID2D1SolidColorBrush* CreateColorBrush(const Color& color) const;
         ID2D1LinearGradientBrush* CreateLinearGradientBrush();
         ID2D1RadialGradientBrush* CreateRadialGradientBrush();
 

@@ -33,8 +33,11 @@ namespace XenUI {
         }
     }
 
-    ID2D1SolidColorBrush* Context::CreateColorBrush() {
-        return nullptr;
+    ID2D1SolidColorBrush* Context::CreateColorBrush(const Color& color) const {
+        ID2D1SolidColorBrush* brush = nullptr;
+        ThrowIfFailed(m_pRenderTarget->CreateSolidColorBrush(color.GetD2DColor(), &brush));
+
+        return brush;
     }
 
     ID2D1LinearGradientBrush* Context::CreateLinearGradientBrush() {

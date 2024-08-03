@@ -14,9 +14,20 @@ namespace XenUI {
         bool CanMaximize {};
         bool Titlebar {};
 
-        static WindowStyle Default() {
+        static WindowStyle DefaultLight() {
             return {
               .BackgroundColor = Color(0xFFF1F1F1),
+              .Borderless      = false,
+              .Resizable       = true,
+              .CanMinimize     = true,
+              .CanMaximize     = true,
+              .Titlebar        = true,
+            };
+        }
+
+        static WindowStyle DefaultDark() {
+            return {
+              .BackgroundColor = Color(0xFF11121C),
               .Borderless      = false,
               .Resizable       = true,
               .CanMinimize     = true,

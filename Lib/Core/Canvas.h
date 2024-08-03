@@ -19,6 +19,10 @@ namespace XenUI {
         ~Canvas();
         void Draw(IWidget* root) const;
 
+        Size<f32> GetSize() const {
+            return m_Size;
+        }
+
     private:
         void Resize(int width, int height);
 

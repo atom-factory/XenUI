@@ -19,7 +19,7 @@ namespace XenUI {
         IApp(int width,
              int height,
              const std::string& title,
-             const WindowStyle& windowStyle = WindowStyle::Default());
+             const WindowStyle& windowStyle = WindowStyle::DefaultDark());
         void Run() const;
 
         virtual ~IApp() = default;
