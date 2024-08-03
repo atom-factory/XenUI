@@ -24,7 +24,7 @@ void ButtonWidget::Draw(ID2D1RenderTarget* context) {
 class DemoApp final : public XenUI::IApp {
 public:
     DemoApp(int width, int height, const std::string& title) : XenUI::IApp(width, height, title) {
-        m_pWindow->SetIcon("xenui.png");
+        m_pWindow->SetIcon("app.ico");
     }
     XenUI::IWidget* BuildUI() override;
 };
