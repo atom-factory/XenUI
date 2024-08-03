@@ -6,15 +6,20 @@
 
 #include "Platform.h"
 #include "Widget.h"
+#include "Window.h"
 
 namespace XenUI {
     class Canvas {
     public:
-        explicit Canvas(HWND window);
+        Canvas(const Window* window, const std::shared_ptr<EventDispatcher>& dispatcher);
         ~Canvas();
         void Draw(IWidget* root) const;
 
     private:
+        void Resize(int width, int height);
+
+        std::shared_ptr<EventDispatcher> m_pDispatcher;
+
         ComPtr<ID2D1Factory> m_pFactory;
         ComPtr<ID2D1HwndRenderTarget> m_pRenderTarget;
     };

@@ -2,13 +2,22 @@
 // Created: 8/2/2024.
 //
 
+#include "App.h"
 #include "Window.h"
+#include "Canvas.h"
+#include "Events.h"
 
 namespace XenUI {
-    Window::Window(
-      HINSTANCE hInstance, int nCmdShow, int width, int height, LPCSTR className, LPCSTR title)
+    Window::Window(IApp* owner,
+                   const std::shared_ptr<EventDispatcher>& dispatcher,
+                   HINSTANCE hInstance,
+                   int nCmdShow,
+                   int width,
+                   int height,
+                   LPCSTR className,
+                   LPCSTR title)
         : m_hWnd(nullptr), m_ClassName(className), m_Title(title), m_Width(width), m_Height(height),
-          m_ShouldClose(false) {
+          m_ShouldClose(false), m_Msg({}), m_pDispatcher(dispatcher), m_pOwner(owner) {
         ThrowIfFailed(::CoInitializeEx(nullptr, COINIT_MULTITHREADED));
 
         if (RegisterWindowClass(hInstance) <= 0) {
@@ -70,10 +79,14 @@ namespace XenUI {
         ::InvalidateRect(m_hWnd, nullptr, TRUE);
     }
 
-    void Window::OnPaint() {}
+    void Window::OnPaint() const {
+        ::ValidateRect(m_hWnd, nullptr);
+        m_pDispatcher->Dispatch(PaintEvent());
+    }
 
-    void Window::OnResize(int width, int height) {
-        // ::UpdateWindow(m_hWnd);
+    void Window::OnResize(int width, int height) const {
+        m_pDispatcher->Dispatch(ResizeEvent(width, height));
+        ::UpdateWindow(m_hWnd);
     }
 
     LRESULT Window::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -84,12 +97,14 @@ namespace XenUI {
             return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
         }
 
+        const auto dispatcher = window->GetDispatcher();
+
         switch (uMsg) {
             case WM_CLOSE: {
+                dispatcher->Dispatch(CloseEvent());
                 window->m_ShouldClose = true;
                 ::PostQuitMessage(0);
-            }
-                return 0;
+            } break;
             case WM_DESTROY:
                 ::PostQuitMessage(0);
                 break;
@@ -97,6 +112,9 @@ namespace XenUI {
                 const auto width  = LOWORD(lParam);
                 const auto height = HIWORD(lParam);
                 window->OnResize(width, height);
+            } break;
+            case WM_PAINT: {
+                window->OnPaint();
             } break;
             default:
                 return ::DefWindowProc(hWnd, uMsg, wParam, lParam);

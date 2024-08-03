@@ -14,6 +14,9 @@ add_library(XenUI STATIC XenUI.h App.h App.cpp
         Canvas.h
         Widget.cpp
         Widget.h
+        EventSystem.cpp
+        EventSystem.h
+        Events.h
 )
 
 target_link_libraries(XenUI PRIVATE

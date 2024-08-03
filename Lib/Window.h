@@ -4,14 +4,17 @@
 
 #pragma once
 
+#include "EventSystem.h"
 #include "Platform.h"
 
-#include <atomic>
-
 namespace XenUI {
+    class IApp;
+
     class Window {
     public:
-        Window(HINSTANCE hInstance,
+        Window(IApp* owner,
+               const std::shared_ptr<EventDispatcher>& dispatcher,
+               HINSTANCE hInstance,
                int nCmdShow,
                int width,
                int height,
@@ -32,17 +35,21 @@ namespace XenUI {
         void DispatchMessages();
 
         /// Getters
-        HWND GetHandle() const {
+        [[nodiscard]] HWND GetHandle() const {
             return m_hWnd;
         }
 
-        bool ShouldClose() const {
+        [[nodiscard]] std::shared_ptr<EventDispatcher> GetDispatcher() const {
+            return m_pDispatcher;
+        }
+
+        [[nodiscard]] bool ShouldClose() const {
             return m_ShouldClose;
         }
 
         /// Event handlers
-        void OnPaint();
-        void OnResize(int width, int height);
+        void OnPaint() const;
+        void OnResize(int width, int height) const;
 
         /// Win32 window process callback
         static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -58,5 +65,8 @@ namespace XenUI {
         int m_Height;
         bool m_ShouldClose;
         MSG m_Msg;
+
+        std::shared_ptr<EventDispatcher> m_pDispatcher;
+        IApp* m_pOwner;
     };
 }  // namespace XenUI
