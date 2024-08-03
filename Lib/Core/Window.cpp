@@ -18,13 +18,15 @@ namespace XenUI {
                    LPCSTR title)
         : m_hWnd(nullptr), m_ClassName(className), m_Title(title), m_Width(width), m_Height(height),
           m_ShouldClose(false), m_Msg({}), m_pDispatcher(dispatcher), m_pOwner(owner) {
+        UNREFERENCED_PARAMETER(hInstance);
         ThrowIfFailed(::CoInitializeEx(nullptr, COINIT_MULTITHREADED));
 
-        if (RegisterWindowClass(hInstance) <= 0) {
+        const auto hInst = ::GetModuleHandle(nullptr);
+        if (RegisterWindowClass(hInst) <= 0) {
             ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
         }
 
-        InitializeInstance(hInstance, nCmdShow);
+        InitializeInstance(hInst, nCmdShow);
     }
 
     Window::~Window() {

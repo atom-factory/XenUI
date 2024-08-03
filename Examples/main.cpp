@@ -1,35 +1,42 @@
-#include "Platform.h"
-#include "App.h"
-#include "Window.h"
+#include "Core/Platform.h"
+#include "Core/App.h"
+#include "Core/Window.h"
+#include "Core/Dimension.h"
 
 #include <memory>
+
+using namespace XenUI;
 
 namespace {
     HINSTANCE g_hInst;
 }  // namespace
 
-class ButtonWidget final : public XenUI::IWidget {
+/// This defines a simple button widget to display on screen.
+/// You can define your own widgets like this or use any of the
+/// built-in widgets found in`Widgets/`
+class ButtonWidget final : public IWidget {
 public:
     ButtonWidget() = default;
-    void Draw(ID2D1RenderTarget* context) override;
+    void Draw(ID2D1RenderTarget* context, const Dimension& dim) override;
 };
 
-void ButtonWidget::Draw(ID2D1RenderTarget* context) {
+void ButtonWidget::Draw(ID2D1RenderTarget* context, const Dimension& dim) {
     ID2D1SolidColorBrush* brush = nullptr;
     XenUI::ThrowIfFailed(context->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &brush));
     context->FillRectangle({100, 100, 300, 200}, brush);
     brush->Release();
 }
 
-class DemoApp final : public XenUI::IApp {
+class DemoApp final : public IApp {
 public:
     DemoApp(int width, int height, const std::string& title) : XenUI::IApp(width, height, title) {
         m_pWindow->SetIcon("app.ico");
     }
-    XenUI::IWidget* BuildUI() override;
+
+    IWidget* BuildUI() override;
 };
 
-XenUI::IWidget* DemoApp::BuildUI() {
+IWidget* DemoApp::BuildUI() {
     return new ButtonWidget();
 }
 

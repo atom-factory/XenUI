@@ -3,10 +3,10 @@ cmake_minimum_required(VERSION 3.14)
 project(XenUI)
 
 include_directories(
-        ${CMAKE_CURRENT_SOURCE_DIR}
+        ..
 )
 
-add_library(XenUI STATIC XenUI.h App.h App.cpp
+add_library(XenUI STATIC App.h App.cpp
         Window.cpp
         Window.h
         Platform.h
@@ -19,6 +19,16 @@ add_library(XenUI STATIC XenUI.h App.h App.cpp
         Events.h
         Context.cpp
         Context.h
+        Mathematics.h
+        Types.h
+        Color.h
+        Color.cpp
+        Offset.cpp
+        Offset.h
+        Size.h
+        Rectangle.cpp
+        Rectangle.h
+        Dimension.h
 )
 
 target_link_libraries(XenUI PRIVATE

@@ -10,7 +10,7 @@
 
 namespace XenUI {
     Canvas::Canvas(const Window* window, const std::shared_ptr<EventDispatcher>& dispatcher)
-        : m_pDispatcher(dispatcher) {
+        : m_Size({0, 0}), m_pDispatcher(dispatcher) {
         ThrowIfFailed(
           D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, IID_PPV_ARGS(&m_pFactory)));
 
@@ -20,6 +20,9 @@ namespace XenUI {
           D2D1::RenderTargetProperties(),
           D2D1::HwndRenderTargetProperties(window->GetHandle(), D2D1::SizeU(rc.right, rc.bottom)),
           &m_pRenderTarget));
+
+        // Update our canvas size
+        m_Size = {CAST<f32>(rc.right), CAST<f32>(rc.bottom)};
 
         // Register our event handlers with the app's event dispatcher
         dispatcher->RegisterListener<ResizeEvent>(
@@ -45,6 +48,8 @@ namespace XenUI {
     void Canvas::Draw(IWidget* root) const {
         const auto rt = m_pRenderTarget.Get();
         if (rt) {
+            const auto dim = Dimension(m_Size);
+
             rt->BeginDraw();
             rt->Clear(D2D1::ColorF(D2D1::ColorF::Black));
 
@@ -57,7 +62,7 @@ namespace XenUI {
                     IWidget* widget = queue.front();
                     queue.pop();
 
-                    widget->Draw(m_pRenderTarget.Get());
+                    widget->Draw(m_pRenderTarget.Get(), dim);
 
                     auto result = widget->GetChildren();
                     if (result.has_value()) {
@@ -77,5 +82,7 @@ namespace XenUI {
         if (m_pRenderTarget) {
             ThrowIfFailed(m_pRenderTarget->Resize(D2D1_SIZE_U(width, height)));
         }
+
+        m_Size = {CAST<f32>(width), CAST<f32>(height)};
     }
 }  // namespace XenUI

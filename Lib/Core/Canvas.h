@@ -18,8 +18,9 @@ namespace XenUI {
     private:
         void Resize(int width, int height);
 
-        std::shared_ptr<EventDispatcher> m_pDispatcher;
+        Size<f32> m_Size;
 
+        std::shared_ptr<EventDispatcher> m_pDispatcher;
         ComPtr<ID2D1Factory> m_pFactory;
         ComPtr<ID2D1HwndRenderTarget> m_pRenderTarget;
     };
