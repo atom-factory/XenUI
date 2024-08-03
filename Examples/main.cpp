@@ -36,7 +36,7 @@ public:
 };
 
 IWidget* DemoApp::BuildUI() {
-    auto dim = Dimension(m_pCanvas->GetSize());
+    const auto dim = m_pCanvas->GetDimension();
 
     const auto helloBtn = new ButtonWidget({dim.Width(20.f), dim.Height(80.f)}, {200, 48});
     const auto quitBtn  = new ButtonWidget({dim.WidthRight(20.f), dim.Height(80.f)}, {200, 48});
