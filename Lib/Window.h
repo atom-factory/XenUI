@@ -26,7 +26,7 @@ namespace XenUI {
         void SetTitle(const std::string& title);
         void SetSize(int width, int height) const;
         void SetPosition(int x, int y) const;
-        void SetIcon(const char* icoFile);
+        void SetIcon(const char* filePath) const;
         void SetStyle(LONG style, LONG exStyle) const;
         void Minimize() const;
         void Maximize() const;

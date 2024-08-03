@@ -8,7 +8,7 @@ namespace {
     HINSTANCE g_hInst;
 }  // namespace
 
-class ButtonWidget : public XenUI::IWidget {
+class ButtonWidget final : public XenUI::IWidget {
 public:
     ButtonWidget() = default;
     void Draw(ID2D1RenderTarget* context) override;
@@ -23,7 +23,9 @@ void ButtonWidget::Draw(ID2D1RenderTarget* context) {
 
 class DemoApp final : public XenUI::IApp {
 public:
-    DemoApp(int width, int height, const std::string& title) : XenUI::IApp(width, height, title) {}
+    DemoApp(int width, int height, const std::string& title) : XenUI::IApp(width, height, title) {
+        m_pWindow->SetIcon("xenui.png");
+    }
     XenUI::IWidget* BuildUI() override;
 };
 

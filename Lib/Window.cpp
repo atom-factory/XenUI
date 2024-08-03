@@ -56,7 +56,16 @@ namespace XenUI {
         ::SetWindowPos(m_hWnd, nullptr, x, y, rc.right, rc.bottom, SWP_NOZORDER | SWP_NOACTIVATE);
     }
 
-    void Window::SetIcon(const char* icoFile) {}
+    void Window::SetIcon(const char* filePath) const {
+        const auto hIcon =
+          (HICON)::LoadImage(nullptr, filePath, IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE);
+        if (!hIcon) {
+            ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
+        }
+
+        ::SendMessage(m_hWnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+        ::SendMessage(m_hWnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+    }
 
     void Window::SetStyle(LONG style, LONG exStyle) const {
         ::SetWindowLong(m_hWnd, GWL_EXSTYLE, exStyle);
