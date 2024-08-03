@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "Color.h"
+#include "Context.h"
 #include "Platform.h"
 #include "Widget.h"
 #include "Window.h"
@@ -11,7 +13,9 @@
 namespace XenUI {
     class Canvas {
     public:
-        Canvas(const Window* window, const std::shared_ptr<EventDispatcher>& dispatcher);
+        Canvas(const Window* window,
+               const Shared<EventDispatcher>& dispatcher,
+               const Color& backgroundColor);
         ~Canvas();
         void Draw(IWidget* root) const;
 
@@ -19,9 +23,9 @@ namespace XenUI {
         void Resize(int width, int height);
 
         Size<f32> m_Size;
+        Color m_BackgroundColor;
 
-        std::shared_ptr<EventDispatcher> m_pDispatcher;
-        ComPtr<ID2D1Factory> m_pFactory;
-        ComPtr<ID2D1HwndRenderTarget> m_pRenderTarget;
+        Shared<EventDispatcher> m_pDispatcher;
+        Unique<Context> m_Context;
     };
 }  // namespace XenUI

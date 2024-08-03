@@ -8,6 +8,7 @@
 #include "Widget.h"
 #include "Window.h"
 #include "Canvas.h"
+#include "WindowStyle.h"
 
 #include <memory>
 
@@ -15,7 +16,10 @@ namespace XenUI {
     /// This is the crux of a XenUI application, and the only required component.
     class IApp {
     public:
-        IApp(int width, int height, const std::string& title);
+        IApp(int width,
+             int height,
+             const std::string& title,
+             const WindowStyle& windowStyle = WindowStyle::Default());
         void Run() const;
 
         virtual ~IApp() = default;

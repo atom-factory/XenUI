@@ -6,15 +6,26 @@
 
 #pragma warning(disable : 4996)
 
+#define WIN32_LEAN_AND_MEAN
+#ifdef min
+    #undef min
+#endif
+
+#ifdef max
+    #undef max
+#endif
+
 #include <Windows.h>
-#include <codecvt>
 #include <windowsx.h>
 #include <wrl/client.h>
+
 #include <d2d1.h>
 #include <dwrite.h>
+
 #include <locale>
 #include <stdexcept>
 #include <string>
+#include <codecvt>
 
 using Microsoft::WRL::ComPtr;
 

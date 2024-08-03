@@ -7,6 +7,15 @@
 #include "Types.h"
 #include "Offset.h"
 #include "Size.h"
+#include "Platform.h"
+
+#ifdef min
+    #undef min
+#endif
+
+#ifdef max
+    #undef max
+#endif
 
 namespace XenUI {
     class Rectangle {
@@ -45,6 +54,10 @@ namespace XenUI {
         [[nodiscard]] Rectangle Intersect(const Rectangle& other) const;
         [[nodiscard]] Rectangle Shift(const Offset& offset) const;
         [[nodiscard]] Rectangle Translate(f32 translateX, f32 translateY) const;
+
+        [[nodiscard]] D2D1_RECT_F ToD2DRect() const {
+            return {Left, Top, Right, Bottom};
+        }
 
         static Rectangle Largest;
         static Rectangle Zero;

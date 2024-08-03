@@ -9,19 +9,15 @@
 #include <queue>
 
 namespace XenUI {
-    Canvas::Canvas(const Window* window, const std::shared_ptr<EventDispatcher>& dispatcher)
-        : m_Size({0, 0}), m_pDispatcher(dispatcher) {
-        ThrowIfFailed(
-          D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, IID_PPV_ARGS(&m_pFactory)));
-
-        RECT rc;
-        ::GetClientRect(window->GetHandle(), &rc);
-        ThrowIfFailed(m_pFactory->CreateHwndRenderTarget(
-          D2D1::RenderTargetProperties(),
-          D2D1::HwndRenderTargetProperties(window->GetHandle(), D2D1::SizeU(rc.right, rc.bottom)),
-          &m_pRenderTarget));
+    Canvas::Canvas(const Window* window,
+                   const std::shared_ptr<EventDispatcher>& dispatcher,
+                   const Color& backgroundColor)
+        : m_Size({0, 0}), m_BackgroundColor(backgroundColor), m_pDispatcher(dispatcher) {
+        m_Context = std::make_unique<Context>(window->GetHandle());
 
         // Update our canvas size
+        RECT rc;
+        ::GetClientRect(window->GetHandle(), &rc);
         m_Size = {CAST<f32>(rc.right), CAST<f32>(rc.bottom)};
 
         // Register our event handlers with the app's event dispatcher
@@ -35,23 +31,16 @@ namespace XenUI {
         window->TriggerRedraw();
     }
 
-    Canvas::~Canvas() {
-        if (m_pRenderTarget) {
-            m_pRenderTarget.Reset();
-        }
-
-        if (m_pFactory) {
-            m_pFactory.Reset();
-        }
-    }
+    // TODO: See if anything actually needs to be cleaned up
+    Canvas::~Canvas() = default;
 
     void Canvas::Draw(IWidget* root) const {
-        const auto rt = m_pRenderTarget.Get();
+        const auto rt = m_Context->GetD2DRenderTarget();
         if (rt) {
             const auto dim = Dimension(m_Size);
 
             rt->BeginDraw();
-            rt->Clear(D2D1::ColorF(D2D1::ColorF::Black));
+            rt->Clear(m_BackgroundColor.GetD2DColor());
 
             // Render widget tree
             if (root) {
@@ -62,7 +51,7 @@ namespace XenUI {
                     IWidget* widget = queue.front();
                     queue.pop();
 
-                    widget->Draw(m_pRenderTarget.Get(), dim);
+                    widget->Draw(m_Context.get(), dim);
 
                     auto result = widget->GetChildren();
                     if (result.has_value()) {
@@ -79,10 +68,7 @@ namespace XenUI {
     }
 
     void Canvas::Resize(int width, int height) {
-        if (m_pRenderTarget) {
-            ThrowIfFailed(m_pRenderTarget->Resize(D2D1_SIZE_U(width, height)));
-        }
-
+        m_Context->Resize(width, height);
         m_Size = {CAST<f32>(width), CAST<f32>(height)};
     }
 }  // namespace XenUI

@@ -13,19 +13,14 @@ namespace {
 
 /// This defines a simple button widget to display on screen.
 /// You can define your own widgets like this or use any of the
-/// built-in widgets found in`Widgets/`
+/// built-in widgets found in `Widgets/`
 class ButtonWidget final : public IWidget {
 public:
-    ButtonWidget() = default;
-    void Draw(ID2D1RenderTarget* context, const Dimension& dim) override;
+    using IWidget::IWidget;
+    void Draw(Context* context, const Dimension& dim) override;
 };
 
-void ButtonWidget::Draw(ID2D1RenderTarget* context, const Dimension& dim) {
-    ID2D1SolidColorBrush* brush = nullptr;
-    XenUI::ThrowIfFailed(context->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::White), &brush));
-    context->FillRectangle({100, 100, 300, 200}, brush);
-    brush->Release();
-}
+void ButtonWidget::Draw(Context* context, const Dimension& dim) {}
 
 class DemoApp final : public IApp {
 public:
@@ -37,7 +32,12 @@ public:
 };
 
 IWidget* DemoApp::BuildUI() {
-    return new ButtonWidget();
+    const auto helloBtn = new ButtonWidget({200, 300}, {200, 48});
+    const auto quitBtn  = new ButtonWidget({600, 300}, {200, 48});
+
+    helloBtn->AddChild(quitBtn);
+
+    return helloBtn;
 }
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance,
@@ -48,7 +48,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
     g_hInst = hInstance;
 
-    DemoApp demoApp(800, 600, "XenUI Demo");
+    DemoApp demoApp(800, 400, "XenUI Demo");
     demoApp.Run();
 
     return S_OK;
