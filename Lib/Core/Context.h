@@ -23,12 +23,15 @@ namespace XenUI {
             return m_pRenderTarget.Get();
         }
 
-        ID2D1SolidColorBrush* CreateColorBrush(const Color& color) const;
-        ID2D1LinearGradientBrush* CreateLinearGradientBrush();
-        ID2D1RadialGradientBrush* CreateRadialGradientBrush();
+        /// @brief Tells Direct2D to re-render the canvas. This will cause a complete frame
+        /// redraw and doesn't trigger widget tree rebuilds (see IApp::OnPaint()).
+        void TriggerRebuild() const {
+            ::InvalidateRect(m_Hwnd, nullptr, false);
+        }
 
     private:
         ComPtr<ID2D1Factory> m_pFactory;
         ComPtr<ID2D1HwndRenderTarget> m_pRenderTarget;
+        HWND m_Hwnd;
     };
 }  // namespace XenUI

@@ -17,7 +17,6 @@ namespace XenUI {
         IWidget(const Offset& position, const Size<f32>& size)
             : m_Position(position), m_Size(size) {}
         virtual ~IWidget();
-        virtual void Draw(Context* context, const Dimension& dim) = 0;
 
         void AddChild(IWidget* component) {
             m_Children.push_back(component);
@@ -31,6 +30,8 @@ namespace XenUI {
             return m_Children;
         }
 
+        virtual void Draw(Context* context, const Dimension& dim) = 0;
+
     protected:
         std::vector<IWidget*> m_Children;
         Offset m_Position;
@@ -39,5 +40,8 @@ namespace XenUI {
         [[nodiscard]] Rectangle GetRect() const {
             return Rectangle::FromCenter(m_Position, m_Size.Width, m_Size.Height);
         }
+
+    private:
+        bool m_Dirty = true;
     };
 }  // namespace XenUI

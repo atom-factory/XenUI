@@ -5,7 +5,11 @@
 #include "Context.h"
 
 namespace XenUI {
-    Context::Context(HWND hwnd) {
+    Context::Context(HWND hwnd) : m_Hwnd(hwnd) {
+        if (!hwnd) {
+            ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
+        }
+
         ThrowIfFailed(
           D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, IID_PPV_ARGS(&m_pFactory)));
 
@@ -31,20 +35,5 @@ namespace XenUI {
         if (m_pRenderTarget) {
             ThrowIfFailed(m_pRenderTarget->Resize(D2D1_SIZE_U(width, height)));
         }
-    }
-
-    ID2D1SolidColorBrush* Context::CreateColorBrush(const Color& color) const {
-        ID2D1SolidColorBrush* brush = nullptr;
-        ThrowIfFailed(m_pRenderTarget->CreateSolidColorBrush(color.GetD2DColor(), &brush));
-
-        return brush;
-    }
-
-    ID2D1LinearGradientBrush* Context::CreateLinearGradientBrush() {
-        return nullptr;
-    }
-
-    ID2D1RadialGradientBrush* Context::CreateRadialGradientBrush() {
-        return nullptr;
     }
 }  // namespace XenUI

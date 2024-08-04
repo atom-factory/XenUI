@@ -12,3 +12,5 @@ include_directories(Lib)
 
 add_subdirectory(Lib/Core)
 add_subdirectory(Examples)
+
+add_executable(WidgetSystem WidgetSystem.cpp)
