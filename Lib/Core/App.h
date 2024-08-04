@@ -36,7 +36,8 @@ namespace XenUI {
         ///  that are called from `BuildUI`.
         virtual IWidget* BuildUI() = 0;
 
-        void OnMouseButton(int button, MouseEventType event) const;
+        void OnMouseButton(const MouseButtonEvent& event) const;
+        void OnMouseMove(const MouseMoveEvent& event) const;
 
         /// @brief Safely terminates the app. This is the only method that should be used to do so.
         void Quit() const {

@@ -56,6 +56,11 @@ namespace XenUI {
             }
         }
 
+        /// @brief Checks if the coordinate `origin` is within the bounds of our widget's rect.
+        bool HitTest(const Offset& origin) const {
+            return GetRect().Contains(origin);
+        }
+
     protected:
         std::vector<IWidget*> m_Children;
         Offset m_Position;

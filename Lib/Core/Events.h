@@ -31,9 +31,16 @@ namespace XenUI {
 
     class MouseButtonEvent final : public IEvent {
     public:
-        MouseButtonEvent(int button, MouseEventType eventType)
-            : Button(button), EventType(eventType) {};
+        MouseButtonEvent(int button, MouseEventType eventType, const Offset& origin)
+            : Button(button), EventType(eventType), Origin(origin) {};
         int Button;
         MouseEventType EventType;
+        Offset Origin;
+    };
+
+    class MouseMoveEvent final : public IEvent {
+    public:
+        explicit MouseMoveEvent(const Offset& origin) : Origin(origin) {}
+        Offset Origin;
     };
 }  // namespace XenUI

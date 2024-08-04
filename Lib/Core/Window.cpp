@@ -128,7 +128,15 @@ namespace XenUI {
                 window->OnPaint();
             } break;
             case WM_LBUTTONDOWN: {
-                dispatcher->Dispatch(MouseButtonEvent(0, MouseEventType::Pressed));
+                dispatcher->Dispatch(
+                  MouseButtonEvent(0, MouseEventType::Pressed, window->m_LastCursorPosition));
+            } break;
+            case WM_MOUSEMOVE: {
+                const auto xPos              = GET_X_LPARAM(lParam);
+                const auto yPos              = GET_Y_LPARAM(lParam);
+                const Offset origin          = {CAST<f32>(xPos), CAST<f32>(yPos)};
+                window->m_LastCursorPosition = origin;
+                dispatcher->Dispatch(MouseMoveEvent(origin));
             } break;
             default:
                 return ::DefWindowProc(hWnd, uMsg, wParam, lParam);

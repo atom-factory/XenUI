@@ -70,6 +70,7 @@ namespace XenUI {
         int m_Height;
         bool m_ShouldClose;
         MSG m_Msg;
+        Offset m_LastCursorPosition;
 
         std::shared_ptr<EventDispatcher> m_pDispatcher;
         IApp* m_pOwner;
