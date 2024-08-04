@@ -26,6 +26,8 @@ add_library(XenUI STATIC
         WindowStyle.h
         Observable.cpp Observable.h
         Interactive.h
+        ../Widgets/Container.cpp
+        ../Widgets/Container.h
 )
 
 target_link_libraries(XenUI PRIVATE

@@ -47,11 +47,14 @@ public:
 };
 
 IWidget* DemoApp::BuildUI() {
-    const auto dim        = m_pCanvas->GetDimension();
+    const auto dim = m_pCanvas->GetDimension();
+
+    const auto onQuit = [this]() { this->Quit(); };
+
     const auto quitButton = new CustomButton({dim.Width(50.f), dim.HeightBottom(14.f)},
                                              {dim.Width(90.f), 52.f},
                                              Color(0xFF2ac3de),
-                                             [this]() { this->Quit(); });
+                                             onQuit);
 
     return quitButton;
 }
