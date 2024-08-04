@@ -8,7 +8,9 @@
 #include "Dimension.h"
 #include "Rectangle.h"
 
+#include <functional>
 #include <optional>
+#include <queue>
 #include <vector>
 
 namespace XenUI {
@@ -31,6 +33,28 @@ namespace XenUI {
         }
 
         virtual void Draw(Context* context, const Dimension& dim) = 0;
+
+        static void TraverseTree(IWidget* root, const std::function<void(IWidget*)>& callback) {
+            if (root) {
+                std::queue<IWidget*> queue;
+                queue.push(root);
+
+                while (!queue.empty()) {
+                    IWidget* widget = queue.front();
+                    queue.pop();
+
+                    callback(widget);
+
+                    auto result = widget->GetChildren();
+                    if (result.has_value()) {
+                        auto children = result.value();
+                        for (const auto& child : children) {
+                            queue.push(child);
+                        }
+                    }
+                }
+            }
+        }
 
     protected:
         std::vector<IWidget*> m_Children;

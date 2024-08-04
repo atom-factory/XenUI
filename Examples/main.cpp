@@ -2,6 +2,7 @@
 #include "Core/App.h"
 #include "Core/Window.h"
 #include "Core/Dimension.h"
+#include "Core/Interactive.h"
 
 #include <memory>
 
@@ -14,6 +15,27 @@ namespace {
 /// This defines a simple button widget to display on screen.
 /// You can define your own widgets like this or use any of the
 /// built-in widgets found in `Widgets/`
+class CustomButton final : public IWidget,
+                           public IInteractive {
+public:
+    CustomButton(const Offset& position,
+                 const Size<f32>& size,
+                 const Color& color,
+                 const std::function<void()>& onPressed)
+        : IWidget(position, size), m_Color(color), m_OnPressed(onPressed) {}
+    void Draw(Context* context, const Dimension& dim) override {
+        // Draw a cyan-colored rectangle with rounded corners
+        context->DrawRect(m_Position, m_Size, m_Color, true, 8.f);
+    }
+
+    void OnPressed() override {
+        m_OnPressed();
+    }
+
+private:
+    Color m_Color;
+    std::function<void()> m_OnPressed;
+};
 
 class DemoApp final : public IApp {
 public:
@@ -25,8 +47,13 @@ public:
 };
 
 IWidget* DemoApp::BuildUI() {
-    const auto dim = m_pCanvas->GetDimension();
-    return nullptr;
+    const auto dim        = m_pCanvas->GetDimension();
+    const auto quitButton = new CustomButton({dim.Width(50.f), dim.HeightBottom(14.f)},
+                                             {dim.Width(90.f), 52.f},
+                                             Color(0xFF2ac3de),
+                                             []() { ::PostQuitMessage(0); });
+
+    return quitButton;
 }
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance,

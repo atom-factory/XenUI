@@ -24,8 +24,8 @@ add_library(XenUI STATIC
         Rectangle.cpp Rectangle.h
         Dimension.h
         WindowStyle.h
-        Observable.cpp
-        Observable.h
+        Observable.cpp Observable.h
+        Interactive.h
 )
 
 target_link_libraries(XenUI PRIVATE

@@ -23,4 +23,17 @@ namespace XenUI {
         int Width;
         int Height;
     };
+
+    enum class MouseEventType {
+        Pressed,
+        Released,
+    };
+
+    class MouseButtonEvent final : public IEvent {
+    public:
+        MouseButtonEvent(int button, MouseEventType eventType)
+            : Button(button), EventType(eventType) {};
+        int Button;
+        MouseEventType EventType;
+    };
 }  // namespace XenUI

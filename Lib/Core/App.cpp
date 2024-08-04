@@ -5,6 +5,9 @@
 #include "App.h"
 #include "Canvas.h"
 #include "Events.h"
+#include "Interactive.h"
+
+#include <queue>
 
 namespace XenUI {
     IApp::IApp(int width, int height, const std::string& title, const WindowStyle& windowStyle) {
@@ -17,6 +20,8 @@ namespace XenUI {
           std::make_unique<Canvas>(m_pWindow.get(), m_pDispatcher, windowStyle.BackgroundColor);
 
         m_pDispatcher->RegisterListener<PaintEvent>([this](const PaintEvent& event) { OnPaint(); });
+        m_pDispatcher->RegisterListener<MouseButtonEvent>(
+          [this](const MouseButtonEvent& event) { OnMouseButton(event.Button, event.EventType); });
     }
 
     void IApp::Run() const {
@@ -25,7 +30,21 @@ namespace XenUI {
         }
     }
 
+    void IApp::OnMouseButton(int button, MouseEventType event) const {
+        // Left button pressed
+        const auto root = m_pCurrentTree;
+        if (button == 0 && event == MouseEventType::Pressed) {
+            IWidget::TraverseTree(root, [](IWidget* widget) {
+                const auto interactive = DCAST<IInteractive*>(widget);
+                if (interactive) {
+                    interactive->OnPressed();
+                }
+            });
+        }
+    }
+
     void IApp::OnPaint() {
-        m_pCanvas->Draw(BuildUI());
+        m_pCurrentTree = BuildUI();
+        m_pCanvas->Draw(m_pCurrentTree);
     }
 }  // namespace XenUI

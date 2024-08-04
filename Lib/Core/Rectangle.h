@@ -59,6 +59,10 @@ namespace XenUI {
             return {Left, Top, Right, Bottom};
         }
 
+        [[nodiscard]] D2D1_ROUNDED_RECT ToD2DRectRounded(f32 borderRadius) const {
+            return D2D1::RoundedRect(ToD2DRect(), borderRadius, borderRadius);
+        }
+
         static Rectangle Largest;
         static Rectangle Zero;
         static Rectangle Lerp(const Rectangle& a, const Rectangle& b, f32 t);

@@ -8,6 +8,7 @@
 #include "Widget.h"
 #include "Window.h"
 #include "Canvas.h"
+#include "Events.h"
 #include "WindowStyle.h"
 
 #include <memory>
@@ -35,11 +36,14 @@ namespace XenUI {
         ///  that are called from `BuildUI`.
         virtual IWidget* BuildUI() = 0;
 
+        void OnMouseButton(int button, MouseEventType event) const;
+
     protected:
         void OnPaint();
 
         std::unique_ptr<Window> m_pWindow;
         std::unique_ptr<Canvas> m_pCanvas;
         std::shared_ptr<EventDispatcher> m_pDispatcher;
+        IWidget* m_pCurrentTree;
     };
 }  // namespace XenUI

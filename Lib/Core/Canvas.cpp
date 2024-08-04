@@ -43,25 +43,8 @@ namespace XenUI {
             rt->Clear(m_BackgroundColor.GetD2DColor());
 
             // Render widget tree
-            if (root) {
-                std::queue<IWidget*> queue;
-                queue.push(root);
-
-                while (!queue.empty()) {
-                    IWidget* widget = queue.front();
-                    queue.pop();
-
-                    widget->Draw(m_Context.get(), dim);
-
-                    auto result = widget->GetChildren();
-                    if (result.has_value()) {
-                        auto children = result.value();
-                        for (const auto& child : children) {
-                            queue.push(child);
-                        }
-                    }
-                }
-            }
+            IWidget::TraverseTree(root,
+                                  [&](IWidget* widget) { widget->Draw(m_Context.get(), dim); });
 
             ThrowIfFailed(rt->EndDraw());
         }
