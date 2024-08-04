@@ -47,6 +47,11 @@ namespace XenUI {
             return m_ShouldClose;
         }
 
+        /// @warning DO NOT CALL THIS UNLESS YOU ARE 100% POSITIVE YOU KNOW WHAT YOU'RE DOING
+        void SetShouldClose(bool shouldClose) {
+            m_ShouldClose = shouldClose;
+        }
+
         /// Event handlers
         void OnPaint() const;
         void OnResize(int width, int height) const;

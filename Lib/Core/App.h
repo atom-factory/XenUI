@@ -38,6 +38,11 @@ namespace XenUI {
 
         void OnMouseButton(int button, MouseEventType event) const;
 
+        /// @brief Safely terminates the app. This is the only method that should be used to do so.
+        void Quit() const {
+            m_pWindow->SetShouldClose(true);
+        }
+
     protected:
         void OnPaint();
 

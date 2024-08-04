@@ -127,6 +127,9 @@ namespace XenUI {
             case WM_PAINT: {
                 window->OnPaint();
             } break;
+            case WM_LBUTTONDOWN: {
+                dispatcher->Dispatch(MouseButtonEvent(0, MouseEventType::Pressed));
+            } break;
             default:
                 return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
         }
