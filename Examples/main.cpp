@@ -21,12 +21,14 @@ public:
     CustomButton(const Offset& position,
                  const Size<f32>& size,
                  const Color& color,
+                 const str& text,
                  const std::function<void()>& onPressed)
-        : IWidget(position, size), m_Color(color), m_OnPressed(onPressed) {}
+        : IWidget(position, size), m_Color(color), m_Text(text), m_OnPressed(onPressed) {}
     void Draw(Context* context, const Dimension& dim) override {
         // Draw a cyan-colored rectangle with rounded corners
-        context->DrawRect(m_Position, m_Size, m_Color, true, 8.f);
-        context->DrawString("Quit", 18.f, m_Position, m_Size, Colors::White);
+        const auto stroke = StrokeProperties(2.f, m_Color);
+        context->DrawRect(GetRect(), m_Color.WithAlpha(0.1f), stroke, true, 8.f);
+        context->DrawString(m_Text, 18.f, m_Position, m_Size, m_Color);
     }
 
     void OnPressed() override {
@@ -35,6 +37,7 @@ public:
 
 private:
     Color m_Color;
+    str m_Text;
     std::function<void()> m_OnPressed;
 };
 
@@ -50,12 +53,24 @@ public:
 IWidget* DemoApp::BuildUI(Context* context) {
     const auto dim = m_pCanvas->GetDimension();
 
+    const auto onSayHello = [this]() {
+        ::MessageBoxA(m_pWindow->GetHandle(), "Hello!", "XenUI Demo", MB_OK);
+    };
     const auto onQuit = [this]() { this->Quit(); };
+
+    const auto sayHelloButton = new CustomButton({dim.Width(50.f), dim.HeightBottom(14.f) - 72.f},
+                                                 {dim.Width(90.f), 52.f},
+                                                 Color(0xFFFF3636),
+                                                 "Say Hello",
+                                                 onSayHello);
 
     const auto quitButton = new CustomButton({dim.Width(50.f), dim.HeightBottom(14.f)},
                                              {dim.Width(90.f), 52.f},
                                              Color(0xFF2ac3de),
+                                             "Quit",
                                              onQuit);
+
+    quitButton->AddChild(sayHelloButton);
 
     return quitButton;
 }

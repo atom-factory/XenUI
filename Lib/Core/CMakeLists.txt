@@ -28,6 +28,7 @@ add_library(XenUI STATIC
         Interactive.h
         ../Widgets/Container.cpp
         ../Widgets/Container.h
+        StrokeProperties.h
 )
 
 target_link_libraries(XenUI PRIVATE

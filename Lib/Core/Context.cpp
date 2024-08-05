@@ -4,8 +4,6 @@
 
 #include "Context.h"
 
-#include "Rectangle.h"
-
 namespace XenUI {
     Context::Context(HWND hwnd) : m_Hwnd(hwnd) {
         if (!hwnd) {
@@ -44,23 +42,51 @@ namespace XenUI {
     }
 
     void Context::DrawRect(const Offset& position,
-                           const Size<f32>& size,
+                           const Size<>& size,
                            const Color& color,
-                           bool rounded,
-                           f32 borderRadius) const {
-        if (m_pRenderTarget) {
-            ID2D1SolidColorBrush* fillBrush = nullptr;
-            ThrowIfFailed(m_pRenderTarget->CreateSolidColorBrush(color.GetD2DColor(), &fillBrush));
-
-            const auto rect = Rectangle::FromCenter(position, size.Width, size.Height);
-            if (rounded) {
-                m_pRenderTarget->FillRoundedRectangle(rect.ToD2DRectRounded(borderRadius),
-                                                      fillBrush);
-            } else {
-                m_pRenderTarget->FillRectangle(rect.ToD2DRect(), fillBrush);
-            }
-            fillBrush->Release();
+                           const bool rounded,
+                           const f32 borderRadius) const {
+        if (!m_pRenderTarget) {
+            return;
         }
+
+        ID2D1SolidColorBrush* fillBrush = nullptr;
+        ThrowIfFailed(m_pRenderTarget->CreateSolidColorBrush(color.GetD2DColor(), &fillBrush));
+
+        const auto rect = Rectangle::FromCenter(position, size.Width, size.Height);
+        if (rounded) {
+            m_pRenderTarget->FillRoundedRectangle(rect.ToD2DRectRounded(borderRadius), fillBrush);
+        } else {
+            m_pRenderTarget->FillRectangle(rect.ToD2DRect(), fillBrush);
+        }
+        fillBrush->Release();
+    }
+
+    void Context::DrawRect(const Rectangle& rect,
+                           const Color& fillColor,
+                           const StrokeProperties& stroke,
+                           const bool rounded,
+                           const f32 borderRadius) const {
+        if (!m_pRenderTarget) {
+            return;
+        }
+
+        ID2D1SolidColorBrush* fillBrush = nullptr;
+        ThrowIfFailed(m_pRenderTarget->CreateSolidColorBrush(fillColor.GetD2DColor(), &fillBrush));
+        ID2D1SolidColorBrush* strokeBrush = nullptr;
+        ThrowIfFailed(
+          m_pRenderTarget->CreateSolidColorBrush(stroke.color.GetD2DColor(), &strokeBrush));
+
+        if (rounded) {
+            m_pRenderTarget->FillRoundedRectangle(rect.ToD2DRectRounded(borderRadius), fillBrush);
+            m_pRenderTarget->DrawRoundedRectangle(rect.ToD2DRectRounded(borderRadius),
+                                                  strokeBrush,
+                                                  stroke.width);
+        } else {
+            m_pRenderTarget->FillRectangle(rect.ToD2DRect(), fillBrush);
+            m_pRenderTarget->DrawRectangle(rect.ToD2DRect(), strokeBrush, stroke.width);
+        }
+        fillBrush->Release();
     }
 
     void Context::DrawString(const std::string& text,

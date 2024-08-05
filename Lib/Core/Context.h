@@ -8,6 +8,8 @@
 #include "Platform.h"
 #include "Offset.h"
 #include "Size.h"
+#include "Rectangle.h"
+#include "StrokeProperties.h"
 
 namespace XenUI {
     class Context {
@@ -33,15 +35,13 @@ namespace XenUI {
 
         // Direct2D abstractions
         void DrawRect(const Offset& position,
-                      const Size<f32>& size,
+                      const Size<>& size,
                       const Color& color,
                       bool rounded     = false,
                       f32 borderRadius = 0.f) const;
-        void DrawRect(const Offset& position,
-                      const Size<f32>& size,
+        void DrawRect(const Rectangle& rect,
                       const Color& fillColor,
-                      f32 strokeWidth,
-                      const Color& strokeColor,
+                      const StrokeProperties& stroke,
                       bool rounded     = false,
                       f32 borderRadius = 0.f) const;
 
