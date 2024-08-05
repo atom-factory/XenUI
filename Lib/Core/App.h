@@ -34,7 +34,7 @@ namespace XenUI {
         ///
         ///  @note Complex UIs will likely be broken up in to separate build methods
         ///  that are called from `BuildUI`.
-        virtual IWidget* BuildUI() = 0;
+        virtual IWidget* BuildUI(Context* context) = 0;
 
         void OnMouseButton(const MouseButtonEvent& event) const;
         void OnMouseMove(const MouseMoveEvent& event) const;
@@ -47,9 +47,9 @@ namespace XenUI {
     protected:
         void OnPaint();
 
-        std::unique_ptr<Window> m_pWindow;
-        std::unique_ptr<Canvas> m_pCanvas;
-        std::shared_ptr<EventDispatcher> m_pDispatcher;
+        Unique<Window> m_pWindow;
+        Unique<Canvas> m_pCanvas;
+        Shared<EventDispatcher> m_pDispatcher;
         IWidget* m_pCurrentTree;
     };
 }  // namespace XenUI

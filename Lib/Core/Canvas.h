@@ -27,6 +27,10 @@ namespace XenUI {
             return Dimension(GetSize());
         }
 
+        Context* GetContext() const {
+            return m_Context.get();
+        }
+
     private:
         void Resize(int width, int height);
 

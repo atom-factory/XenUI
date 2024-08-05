@@ -21,6 +21,10 @@ namespace XenUI {
           D2D1::RenderTargetProperties(),
           D2D1::HwndRenderTargetProperties(hwnd, D2D1::SizeU(rc.right, rc.bottom)),
           &m_pRenderTarget));
+
+        ThrowIfFailed(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED,
+                                          __uuidof(IDWriteFactory),
+                                          CAST<IUnknown**>(&m_pDWriteFactory)));
     }
 
     Context::~Context() {
@@ -57,5 +61,42 @@ namespace XenUI {
             }
             fillBrush->Release();
         }
+    }
+
+    void Context::DrawString(const std::string& text,
+                             f32 fontSize,
+                             const Offset& position,
+                             const Size<f32>& size,
+                             const Color& color) const {
+        if (!m_pRenderTarget || !m_pDWriteFactory) {
+            return;
+        }
+
+        IDWriteTextFormat* format = nullptr;
+        ThrowIfFailed(m_pDWriteFactory->CreateTextFormat(L"Segoe UI",
+                                                         nullptr,
+                                                         DWRITE_FONT_WEIGHT_NORMAL,
+                                                         DWRITE_FONT_STYLE_NORMAL,
+                                                         DWRITE_FONT_STRETCH_EXPANDED,
+                                                         fontSize,
+                                                         L"en-us",
+                                                         &format));
+        ThrowIfFailed(format->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER));
+        ThrowIfFailed(format->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER));
+
+        ID2D1SolidColorBrush* brush = nullptr;
+        ThrowIfFailed(m_pRenderTarget->CreateSolidColorBrush(color.GetD2DColor(), &brush));
+
+        wstr wText;
+        ANSIToWide(text, wText);
+        m_pRenderTarget->DrawText(
+          wText.c_str(),
+          wcslen(wText.c_str()),
+          format,
+          Rectangle::FromCenter(position, size.Width, size.Height).ToD2DRect(),
+          brush);
+
+        brush->Release();
+        format->Release();
     }
 }  // namespace XenUI

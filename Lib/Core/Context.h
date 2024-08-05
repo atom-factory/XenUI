@@ -51,12 +51,17 @@ namespace XenUI {
         void DrawImage() {}
         void DrawLine() {}
         void DrawParagraph() {}
-        void DrawString() {}
+        void DrawString(const std::string& text,
+                        f32 fontSize,
+                        const Offset& position,
+                        const Size<f32>& size,
+                        const Color& color) const;
         void DrawPath() {}
 
     private:
         ComPtr<ID2D1Factory> m_pFactory;
         ComPtr<ID2D1HwndRenderTarget> m_pRenderTarget;
+        ComPtr<IDWriteFactory> m_pDWriteFactory;
         HWND m_Hwnd;
     };
 }  // namespace XenUI

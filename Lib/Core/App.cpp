@@ -48,12 +48,12 @@ namespace XenUI {
     }
 
     void IApp::OnMouseMove(const MouseMoveEvent& event) const {
-        const auto fmt = std::format("X: {:.2f}, Y: {:.2f}", event.Origin.X, event.Origin.Y);
-        m_pWindow->SetTitle(fmt);
+        // const auto fmt = std::format("X: {:.2f}, Y: {:.2f}", event.Origin.X, event.Origin.Y);
+        // m_pWindow->SetTitle(fmt);
     }
 
     void IApp::OnPaint() {
-        m_pCurrentTree = BuildUI();
+        m_pCurrentTree = BuildUI(m_pCanvas->GetContext());
         m_pCanvas->Draw(m_pCurrentTree);
     }
 }  // namespace XenUI

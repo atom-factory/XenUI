@@ -26,6 +26,7 @@ public:
     void Draw(Context* context, const Dimension& dim) override {
         // Draw a cyan-colored rectangle with rounded corners
         context->DrawRect(m_Position, m_Size, m_Color, true, 8.f);
+        context->DrawString("Quit", 18.f, m_Position, m_Size, Colors::White);
     }
 
     void OnPressed() override {
@@ -43,10 +44,10 @@ public:
         m_pWindow->SetIcon("app.ico");
     }
 
-    IWidget* BuildUI() override;
+    IWidget* BuildUI(Context* context) override;
 };
 
-IWidget* DemoApp::BuildUI() {
+IWidget* DemoApp::BuildUI(Context* context) {
     const auto dim = m_pCanvas->GetDimension();
 
     const auto onQuit = [this]() { this->Quit(); };

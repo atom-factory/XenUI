@@ -35,22 +35,24 @@ namespace XenUI {
         virtual void Draw(Context* context, const Dimension& dim) = 0;
 
         static void TraverseTree(IWidget* root, const std::function<void(IWidget*)>& callback) {
-            if (root) {
-                std::queue<IWidget*> queue;
-                queue.push(root);
+            if (!root) {
+                return;
+            }
 
-                while (!queue.empty()) {
-                    IWidget* widget = queue.front();
-                    queue.pop();
+            std::queue<IWidget*> queue;
+            queue.push(root);
 
-                    callback(widget);
+            while (!queue.empty()) {
+                IWidget* widget = queue.front();
+                queue.pop();
 
-                    auto result = widget->GetChildren();
-                    if (result.has_value()) {
-                        auto children = result.value();
-                        for (const auto& child : children) {
-                            queue.push(child);
-                        }
+                callback(widget);
+
+                auto result = widget->GetChildren();
+                if (result.has_value()) {
+                    auto children = result.value();
+                    for (const auto& child : children) {
+                        queue.push(child);
                     }
                 }
             }
