@@ -5,7 +5,7 @@
 #include "Rectangle.h"
 
 namespace XenUI {
-    Rectangle Rectangle::Largest = FromPoints(Offset(0.f, 0.f), Offset(Inf32, Inf32));
+    Rectangle Rectangle::Largest = FromPoints(Offset(0.f, 0.f), Offset(kInf32, kInf32));
     Rectangle Rectangle::Zero    = {0, 0, 0, 0};
 
     Rectangle::Rectangle(const Offset& offset, const Size<f32>& size) {

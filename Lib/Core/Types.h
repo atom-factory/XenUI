@@ -10,7 +10,7 @@
 #include <string>
 #include <limits>
 #include <filesystem>
-#include <optional>
+#include <exception>
 
 #define CAST static_cast
 #define RCAST reinterpret_cast
@@ -30,6 +30,9 @@ using f64  = double;
 using wstr = std::wstring;
 using str  = std::string;
 
+using Exception    = std::exception;
+using RuntimeError = std::runtime_error;
+
 namespace FileSystem = std::filesystem;
 using Path           = std::filesystem::path;
 
@@ -42,13 +45,10 @@ template<class T>
 using Shared = std::shared_ptr<T>;
 
 template<class T>
-using Option = std::optional<T>;
-
-template<class T>
 using Unique = std::unique_ptr<T>;
 
 template<class T>
 using Vector = std::vector<T>;
 
-constexpr auto Inf32 = std::numeric_limits<float>::infinity();
-constexpr auto Inf64 = std::numeric_limits<double>::infinity();
+constexpr auto kInf32 = std::numeric_limits<f32>::infinity();
+constexpr auto kInf64 = std::numeric_limits<f64>::infinity();

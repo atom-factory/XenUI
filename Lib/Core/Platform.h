@@ -23,14 +23,15 @@
 #include <dwrite.h>
 
 #include <locale>
-#include <stdexcept>
 #include <string>
 #include <codecvt>
+
+#include "Types.h"
 
 using Microsoft::WRL::ComPtr;
 
 namespace XenUI {
-    inline std::string GetHResultErrorMessage(HRESULT hr) {
+    inline str GetHResultErrorMessage(HRESULT hr) {
         char* errorMsg = nullptr;
         FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
                          FORMAT_MESSAGE_IGNORE_INSERTS,
@@ -41,7 +42,7 @@ namespace XenUI {
                        0,
                        nullptr);
 
-        std::string errorString;
+        str errorString;
         if (errorMsg) {
             errorString = errorMsg;
             LocalFree(errorMsg);
@@ -52,17 +53,17 @@ namespace XenUI {
         return errorString;
     }
 
-    class com_exception final : public std::exception {
+    class ComError final : public Exception {
     public:
-        explicit com_exception(HRESULT hr) noexcept : result(hr) {}
+        explicit ComError(HRESULT hr) noexcept : result(hr) {}
 
         const char* what() const noexcept override {
-            static char s_str[256] = {};
-            sprintf_s(s_str,
+            static char msg[256] = {};
+            sprintf_s(msg,
                       "Failure with HRESULT of %08X.\nError: %s\n",
                       static_cast<unsigned int>(result),
                       GetHResultErrorMessage(result).c_str());
-            return s_str;
+            return msg;
         }
 
     private:
@@ -71,16 +72,16 @@ namespace XenUI {
 
     inline void ThrowIfFailed(HRESULT hr) {
         if (FAILED(hr)) {
-            throw com_exception(hr);
+            throw ComError(hr);
         }
     }
 
-    inline void WideToANSI(const std::wstring& value, std::string& converted) {
+    inline void WideToANSI(const wstr& value, str& converted) {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
         converted = converter.to_bytes(value);
     }
 
-    inline void ANSIToWide(const std::string& value, std::wstring& converted) {
+    inline void ANSIToWide(const str& value, wstr& converted) {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
         converted = converter.from_bytes(value);
     }

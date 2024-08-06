@@ -7,6 +7,7 @@ include_directories(
 )
 
 add_library(XenUI STATIC
+        # CORE
         Platform.h
         App.h App.cpp
         Window.cpp Window.h
@@ -26,9 +27,11 @@ add_library(XenUI STATIC
         WindowStyle.h
         Observable.cpp Observable.h
         Interactive.h
-        ../Widgets/Container.cpp
-        ../Widgets/Container.h
         StrokeProperties.h
+        # WIDGETS
+        ../Widgets/Container.cpp ../Widgets/Container.h
+        ../Widgets/PushButton.cpp ../Widgets/PushButton.h
+        IO.h
 )
 
 target_link_libraries(XenUI PRIVATE

@@ -6,7 +6,7 @@
 #include "Mathematics.h"
 
 namespace XenUI {
-    Offset Offset::Infinite = {Inf32, Inf32};
+    Offset Offset::Infinite = {kInf32, kInf32};
     Offset Offset::Zero     = {0, 0};
 
     bool Offset::operator==(const Offset& other) const {
@@ -70,7 +70,7 @@ namespace XenUI {
     }
 
     bool Offset::IsFinite() const {
-        return X != Inf32 && Y != Inf32;
+        return X != kInf32 && Y != kInf32;
     }
 
     /// Yeah... probably don't need this.
